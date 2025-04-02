@@ -1,0 +1,58 @@
+# Ignore all node_modules folders
+node_modules/
+
+# Ignore build output directories
+dist/
+build/
+out/
+.next/
+
+# Ignore logs
+*.log
+logs/
+*.gz
+
+# Ignore environment variable files
+.env
+.env.local
+.env.*.local
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.swp
+
+# Ignore coverage reports
+coverage/
+
+# Ignore package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore specific file types
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
+
+# Ignore test snapshots
+__snapshots__/
+*.snap
+
+# Ignore generated documentation
+docs/
+*.md
+
+# Ignore custom directories or files
+custom-folder/
+custom-file.txt
