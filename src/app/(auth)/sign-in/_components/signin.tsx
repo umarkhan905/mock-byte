@@ -6,21 +6,21 @@ import {
 } from "@/components/form/form-card";
 import { SocialLoginSeperator } from "@/components/auth/social-login-separator";
 import { SocialLogin } from "@/components/auth/social-login";
-import { SignupForm } from "./signup-form";
+import { SignInForm } from "./signin-form";
 import { BackButton } from "@/components/auth/back-button";
 
-export function InterviewerSignup() {
+export function SignIn() {
   return (
     <FormCard
-      cardLabel="Create account as Interviewer"
-      cardDescription="Join to conduct interviews and share your expertise."
+      cardLabel="Welcome back to mock byte"
+      cardDescription="Login to your account and start your interview journey today!"
     >
       <FormCardContent>
-        <SignupForm />
+        <SignInForm />
         <BackButton
-          backButtonLabel="Sign In"
-          backButtonLink="/sign-in"
-          backButtonDescription="Already have an account?"
+          backButtonLabel="Sign Up"
+          backButtonLink="/sign-up/interviewee"
+          backButtonDescription="Don't have an account?"
         />
       </FormCardContent>
 

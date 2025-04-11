@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Logo from "@/components/branding/logo";
+import { IconBackground } from "../icons/icon-bg";
 
 interface FormCardProps {
   cardLabel: string;
@@ -26,9 +27,9 @@ export function FormCard({
   return (
     <Card className={`max-w-xl w-full group mx-auto ${className}`} {...props}>
       <CardHeader>
-        <div className="flex items-center justify-center size-14 bg-primary/20 rounded-full group-hover:bg-primary/30 transition-all duration-300">
+        <IconBackground className="group-hover:bg-primary/30">
           <Logo variant="logo-primary" className="w-auto h-10" />
-        </div>
+        </IconBackground>
 
         <CardTitle className="text-xl font-medium">{cardLabel}</CardTitle>
         <CardDescription>{cardDescription}</CardDescription>

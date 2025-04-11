@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,8 +17,16 @@ import {
 } from "@/schemas/interviewee-signup-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import { registerInterviewee } from "@/actions/register";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import FormError from "@/components/form/form-error";
 
 export function SignupForm() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   const form = useForm<intervieweeSignupSchemaType>({
     resolver: zodResolver(intervieweeSignupSchema),
     defaultValues: {
@@ -29,9 +37,24 @@ export function SignupForm() {
     },
   });
 
-  function onSubmit(values: intervieweeSignupSchemaType) {
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: intervieweeSignupSchemaType) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await registerInterviewee(values);
+      if (!res.success) {
+        setError(res.message);
+        return;
+      }
+
+      toast(res.message);
+      router.push(`/verify/${res?.data?.id as string}`);
+    } catch (error) {
+      console.log("Error creating user:", error);
+      setError("Error creating user. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <Form {...form}>
@@ -113,12 +136,18 @@ export function SignupForm() {
             </FormItem>
           )}
         />
+        {error && <FormError message={error} />}
 
         <Button
           type="submit"
           className="rounded-full w-full min-h-11 text-foreground"
+          disabled={loading}
         >
-          Create Account
+          {loading ? (
+            <Loader2 className="size-6 animate-spin" />
+          ) : (
+            "Create Account"
+          )}
         </Button>
       </form>
     </Form>

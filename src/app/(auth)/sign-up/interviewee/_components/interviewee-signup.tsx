@@ -19,7 +19,7 @@ export function IntervieweeSignup() {
         <SignupForm />
         <BackButton
           backButtonLabel="Sign In"
-          backButtonLink="/sign-in/interviewee"
+          backButtonLink="/sign-in"
           backButtonDescription="Already have an account?"
         />
       </FormCardContent>
