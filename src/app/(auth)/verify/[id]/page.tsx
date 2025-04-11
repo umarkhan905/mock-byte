@@ -11,5 +11,5 @@ export default async function EmailVerificationPage({
   const id = (await params).id;
   const code = (await searchParams).code;
 
-  return <VerifyEmail identifier={id as string} code={code as string} />;
+  return <VerifyEmail identifier={id} code={code} />;
 }

@@ -17,7 +17,7 @@ import {
 } from "@/schemas/interviewee-signup-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { registerInterviewee } from "@/actions/register";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ import FormError from "@/components/form/form-error";
 export function SignupForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const router = useRouter();
   const form = useForm<intervieweeSignupSchemaType>({
     resolver: zodResolver(intervieweeSignupSchema),
@@ -56,6 +57,11 @@ export function SignupForm() {
       setLoading(false);
     }
   }
+
+  const handleShowPassword = () => {
+    setIsShowPassword((isShowPassword) => !isShowPassword);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -125,11 +131,25 @@ export function SignupForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className="min-h-11 rounded-full"
-                  placeholder="••••••••"
-                />
+                <div className="relative">
+                  <Input
+                    {...field}
+                    type={isShowPassword ? "text" : "password"}
+                    className="min-h-11 rounded-full"
+                    placeholder="••••••••"
+                  />
+                  {isShowPassword ? (
+                    <EyeOff
+                      className="size-5 absolute top-1/2 -translate-1/2 right-0.5 text-muted-foreground"
+                      onClick={handleShowPassword}
+                    />
+                  ) : (
+                    <Eye
+                      className="size-5 absolute top-1/2 -translate-1/2 right-0.5 text-muted-foreground"
+                      onClick={handleShowPassword}
+                    />
+                  )}
+                </div>
               </FormControl>
 
               <FormMessage />

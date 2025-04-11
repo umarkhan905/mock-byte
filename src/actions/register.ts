@@ -11,6 +11,7 @@ import { hashPassword } from "@/utils/hash-password";
 import { emailVerificationCode } from "@/utils/verification-code";
 import { sendEmail } from "@/utils/send-email";
 import EmailVerification from "@/emails/email-verification";
+import { BASE_ADDRESS } from "@/constants/base-address";
 
 const registerInterviewee = async (formData: intervieweeSignupSchemaType) => {
   await connectDB();
@@ -49,7 +50,7 @@ const registerInterviewee = async (formData: intervieweeSignupSchemaType) => {
       "MockByte - Verify your email",
       EmailVerification({
         userName: data.firstName,
-        verificationUrl: `http://localhost:3000/verify/${interviewee._id}?code=${verificationCode}`,
+        verificationUrl: `${BASE_ADDRESS}/verify/${interviewee._id.toString()}?code=${verificationCode}`,
         verificationCode: verificationCode.toString(),
       })
     );
@@ -65,7 +66,7 @@ const registerInterviewee = async (formData: intervieweeSignupSchemaType) => {
     return successResponse(
       201,
       "Interviewee signup successful. Please verify your email",
-      { id: interviewee._id }
+      { id: interviewee._id.toString() }
     );
   } catch (error) {
     console.log("Error occurs while creating interviewee", error);
