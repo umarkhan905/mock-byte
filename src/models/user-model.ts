@@ -1,4 +1,6 @@
+// import { hashPassword } from "@/utils/hash-password";
 import mongoose, { Document } from "mongoose";
+// import bcrypt from "bcryptjs";
 
 interface IUser extends Document {
   firstName?: string;
@@ -111,6 +113,6 @@ const userSchema = new mongoose.Schema<IUser>(
   { timestamps: true }
 );
 
-const User = mongoose.models.User<IUser> || mongoose.model("User", userSchema);
+const User = mongoose.models?.User<IUser> || mongoose.model("User", userSchema);
 
 export default User;

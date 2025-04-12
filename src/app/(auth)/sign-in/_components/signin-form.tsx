@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,8 +14,16 @@ import { Input } from "@/components/ui/input";
 import { type SignInSchemaType, signInSchema } from "@/schemas/signin-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { signInUser } from "@/actions/login";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import FormError from "@/components/form/form-error";
+import { Loader2 } from "lucide-react";
 
 export function SignInForm() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const router = useRouter();
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -24,9 +32,24 @@ export function SignInForm() {
     },
   });
 
-  function onSubmit(values: SignInSchemaType) {
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: SignInSchemaType) {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await signInUser(values);
+      console.log("res", res);
+      if (!res?.success) {
+        setError(res?.message as string);
+        return;
+      }
+      toast(res.message);
+      router.push("/dashboard/interviewee");
+    } catch (error) {
+      console.log("Error Signin user:", error);
+      setError("Internal server error");
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <Form {...form}>
@@ -69,11 +92,13 @@ export function SignInForm() {
           )}
         />
 
+        {error && <FormError message={error} />}
+
         <Button
           type="submit"
           className="rounded-full w-full min-h-11 text-foreground"
         >
-          Sign In
+          {loading ? <Loader2 className="animate-spin size-6" /> : "Sign In"}
         </Button>
       </form>
     </Form>
