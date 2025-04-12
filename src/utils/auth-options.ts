@@ -34,6 +34,29 @@ export const authOptions: NextAuthConfig = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token._id = user._id;
+        token.verified = user.verified;
+        token.coins = user.coins;
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user._id = token._id as string;
+        session.user.verified = token.verified as boolean;
+        session.user.coins = token.coins as number;
+        session.user.role = token.role as "interviewer" | "interviewee";
+      }
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
   pages: {
     signIn: "/sign-in",
   },
