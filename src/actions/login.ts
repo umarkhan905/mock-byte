@@ -4,6 +4,7 @@ import { signIn } from "@/auth";
 import { signInSchema, SignInSchemaType } from "@/schemas/signin-schema";
 import { errorResponse, successResponse } from "@/utils/api-response";
 import { AuthError } from "next-auth";
+import { getUserRole } from "./get-user-role";
 
 const signInUser = async (formData: SignInSchemaType) => {
   try {
@@ -22,7 +23,8 @@ const signInUser = async (formData: SignInSchemaType) => {
       redirect: false,
     });
 
-    return successResponse(200, "Signed in successfully");
+    const role = await getUserRole();
+    return successResponse(200, "Signed in successfully", { role });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

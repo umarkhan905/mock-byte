@@ -18,12 +18,14 @@ import { signInUser } from "@/actions/login";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import FormError from "@/components/form/form-error";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export function SignInForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const router = useRouter();
+
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -37,13 +39,21 @@ export function SignInForm() {
     setError("");
     try {
       const res = await signInUser(values);
-      console.log("res", res);
       if (!res?.success) {
         setError(res?.message as string);
         return;
       }
+
+      if ("data" in res && "role" in res.data) {
+        const role = res.data.role;
+        router.push(
+          role === "interviewer"
+            ? "/dashboard/interviewer"
+            : "/dashboard/interviewee"
+        );
+      }
+
       toast(res.message);
-      router.push("/dashboard/interviewee");
     } catch (error) {
       console.log("Error Signin user:", error);
       setError("Internal server error");
@@ -51,6 +61,11 @@ export function SignInForm() {
       setLoading(false);
     }
   }
+
+  const handleShowPassword = () => {
+    setIsShowPassword((isShowPassword) => !isShowPassword);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -80,11 +95,25 @@ export function SignInForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className="min-h-11 rounded-full"
-                  placeholder="••••••••"
-                />
+                <div className="relative">
+                  <Input
+                    {...field}
+                    type={isShowPassword ? "text" : "password"}
+                    className="min-h-11 rounded-full"
+                    placeholder="••••••••"
+                  />
+                  {isShowPassword ? (
+                    <EyeOff
+                      className="size-5 absolute top-1/2 -translate-1/2 right-0.5 text-muted-foreground"
+                      onClick={handleShowPassword}
+                    />
+                  ) : (
+                    <Eye
+                      className="size-5 absolute top-1/2 -translate-1/2 right-0.5 text-muted-foreground"
+                      onClick={handleShowPassword}
+                    />
+                  )}
+                </div>
               </FormControl>
 
               <FormMessage />
